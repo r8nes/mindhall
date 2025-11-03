@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Дворец памяти — 00–20 (линейный/сетка)</title>
+  <style>
+    :root{
+      --bg:#0f172a;
+      --card:#111827;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --accent:#60a5fa;
+      --border:#1f2937;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Noto Sans', 'Helvetica Neue', Arial, 'Apple Color Emoji','Segoe UI Emoji';
+      background: radial-gradient(1200px 800px at 70% -10%, rgba(96,165,250,0.15), transparent 60%),
+                  radial-gradient(1000px 700px at -10% 120%, rgba(34,197,94,0.12), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      padding:48px 20px 64px;
+      line-height:1.55;
+    }
+    .wrap{max-width: 900px; margin:0 auto;}
+    header h1{margin:0 0 8px; font-size: clamp(24px, 4vw, 36px); letter-spacing:.3px;}
+    header p{margin:0 0 16px; color:var(--muted)}
+    .controls{
+      display:flex; align-items:center; gap:12px; margin: 10px 0 20px;
+      color:var(--muted); font-size:14px;
+    }
+    .toggle{
+      position: relative; width: 60px; height: 30px;
+      background: rgba(96,165,250,0.2);
+      border:1px solid rgba(96,165,250,0.35);
+      border-radius: 30px; cursor: pointer; display:inline-flex; align-items:center;
+      transition: .2s ease;
+    }
+    .toggle input{ display:none; }
+    .thumb{
+      position:absolute; width:26px; height:26px; border-radius:50%;
+      background:#bfdbfe; left:2px; top:50%; transform: translateY(-50%);
+      transition: .25s cubic-bezier(.4,0,.2,1);
+      box-shadow: 0 4px 10px rgba(0,0,0,.35);
+    }
+    .toggle input:checked + .thumb{ left: 32px; }
+    .label-on{font-weight:600; color:#bfdbfe;}
+    .label-off{color:var(--muted)}
+
+    /* List/Grid container */
+    .cards{
+      display: grid;
+      grid-template-columns: 1fr; /* vertical default */
+      gap: 12px;
+    }
+    .cards.grid-mode{
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media (max-width:900px){
+      .cards.grid-mode{ grid-template-columns: repeat(3,1fr); }
+    }
+    @media (max-width:640px){
+      .cards.grid-mode{ grid-template-columns: repeat(2,1fr); }
+    }
+
+    .card{
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:16px;
+      padding:16px 14px;
+      backdrop-filter: blur(3px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+      display:grid; grid-template-columns: 64px auto; gap:12px; align-items:center;
+    }
+    .cards.grid-mode .card{ grid-template-columns: 1fr; }
+    .num{
+      display:flex; align-items:center; justify-content:center;
+      width:56px;height:56px; border-radius:12px;
+      background: rgba(96,165,250,0.15); color:#bfdbfe; font-weight:800; letter-spacing:.6px;
+      border:1px solid rgba(96,165,250,0.35);
+    }
+    .title{ font-weight:800; font-size:18px; margin:0 0 2px; }
+    .tag{ display:inline-block; font-size:12px; color:#cbd5e1; opacity:.95; padding:2px 8px; border-radius:999px; border:1px solid var(--border); background: rgba(203,213,225,0.06); margin: 2px 0 8px; }
+    .item{ margin:0; color:#d1d5db; }
+
+    footer{ margin-top:24px; color:var(--muted); font-size:12px; }
+
+    @media print {
+      body{ background:#fff; color:#000; padding:12mm; }
+      .card{ box-shadow:none; border:1px solid #ddd; background:#fff; }
+      .num{ background:#eee; color:#111; border-color:#ccc; }
+      .tag{ background:#f7f7f7; color:#111; border-color:#ddd; }
+      header p, footer{ color:#333; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Дворец памяти — 00–20</h1>
+      <p>Режимы: вертикальный список (по умолчанию) или сетка 4×5. Используй тумблер, чтобы переключать.</p>
+      <div class="controls">
+        <span id="modeLabel" class="label-off">Список</span>
+        <label class="toggle" title="Переключить на сетку 4×5">
+          <input type="checkbox" id="gridToggle" aria-label="Сетка 4×5">
+          <span class="thumb"></span>
+        </label>
+        <span class="label-on">Сетка 4×5</span>
+      </div>
+    </header>
+
+    <section id="cards" class="cards">
+      <!-- 00 -->
+      <article class="card"><div class="num">00</div><div>
+        <div class="title">Зеро</div><div class="tag">Code Geass</div><p class="item">Маска</p>
+      </div></article>
+      <!-- 01 -->
+      <article class="card"><div class="num">01</div><div>
+        <div class="title">Сайтама</div><div class="tag">One Punch Man</div><p class="item">Жёлтое трико</p>
+      </div></article>
+      <!-- 02 -->
+      <article class="card"><div class="num">02</div><div>
+        <div class="title">Ученик</div><div class="tag">Школа</div><p class="item">Портфель (&laquo;Опять двойка&raquo;)</p>
+      </div></article>
+      <!-- 03 -->
+      <article class="card"><div class="num">03</div><div>
+        <div class="title">Богатырь (Алёша)</div><div class="tag">Сказки</div><p class="item">Осёл</p>
+      </div></article>
+      <!-- 04 -->
+      <article class="card"><div class="num">04</div><div>
+        <div class="title">Аватар</div><div class="tag">Повелитель стихий</div><p class="item">Шест</p>
+      </div></article>
+      <!-- 05 -->
+      <article class="card"><div class="num">05</div><div>
+        <div class="title">Брюс Уиллис</div><div class="tag">Пятый элемент</div><p class="item">Мультипаспорт</p>
+      </div></article>
+      <!-- 06 -->
+      <article class="card"><div class="num">06</div><div>
+        <div class="title">Дьявол</div><div class="tag">Мифология</div><p class="item">Трезубец</p>
+      </div></article>
+      <!-- 07 -->
+      <article class="card"><div class="num">07</div><div>
+        <div class="title">Джеймс Бонд</div><div class="tag">Агент 007</div><p class="item">Пистолет</p>
+      </div></article>
+      <!-- 08 -->
+      <article class="card"><div class="num">08</div><div>
+        <div class="title">Осьминог</div><div class="tag">Море</div><p class="item">Щупальце</p>
+      </div></article>
+      <!-- 09 -->
+      <article class="card"><div class="num">09</div><div>
+        <div class="title">Кьюби</div><div class="tag">Naruto</div><p class="item">Хвостатая бомба</p>
+      </div></article>
+      <!-- 10 -->
+      <article class="card"><div class="num">10</div><div>
+        <div class="title">Тентен</div><div class="tag">Naruto</div><p class="item">Кунаи</p>
+      </div></article>
+      <!-- 11 -->
+      <article class="card"><div class="num">11</div><div>
+        <div class="title">Я</div><div class="tag">Личный якорь</div><p class="item">Барабанные палочки</p>
+      </div></article>
+      <!-- 12 -->
+      <article class="card"><div class="num">12</div><div>
+        <div class="title">Иисус</div><div class="tag">Тайная вечеря</div><p class="item">Вино</p>
+      </div></article>
+      <!-- 13 -->
+      <article class="card"><div class="num">13</div><div>
+        <div class="title">Джейсон</div><div class="tag">Пятница 13</div><p class="item">Хоккейная маска</p>
+      </div></article>
+      <!-- 14 -->
+      <article class="card"><div class="num">14</div><div>
+        <div class="title">Купидон</div><div class="tag">Мифология</div><p class="item">Лук</p>
+      </div></article>
+      <!-- 15 -->
+      <article class="card"><div class="num">15</div><div>
+        <div class="title">Самурай</div><div class="tag">Архетип</div><p class="item">Катана</p>
+      </div></article>
+      <!-- 16 -->
+      <article class="card"><div class="num">16</div><div>
+        <div class="title">Элвис Пресли</div><div class="tag">Король рок-н-ролла</div><p class="item">Микрофон</p>
+      </div></article>
+      <!-- 17 -->
+      <article class="card"><div class="num">17</div><div>
+        <div class="title">Ленин</div><div class="tag">История</div><p class="item">Красное знамя</p>
+      </div></article>
+      <!-- 18 -->
+      <article class="card"><div class="num">18</div><div>
+        <div class="title">Девушка (совершеннолетие)</div><div class="tag">Праздник</div><p class="item">Бокал</p>
+      </div></article>
+      <!-- 19 -->
+      <article class="card"><div class="num">19</div><div>
+        <div class="title">Дарвин</div><div class="tag">Эволюция</div><p class="item">Обезьяна</p>
+      </div></article>
+      <!-- 20 -->
+      <article class="card"><div class="num">20</div><div>
+        <div class="title">Солдат</div><div class="tag">Архетип</div><p class="item">Каска</p>
+      </div></article>
+    </section>
+
+    <footer>Под печатью работает: Ctrl/Cmd+P. Тумблер переключает режим списка/сетки 4×5.</footer>
+  </div>
+
+  <script>
+    const toggle = document.getElementById('gridToggle');
+    const cards = document.getElementById('cards');
+
+    // remember choice for the session
+    const saved = sessionStorage.getItem('gridMode');
+    if(saved === '1'){ cards.classList.add('grid-mode'); toggle.checked = true; }
+
+    toggle.addEventListener('change', (e)=>{
+      const on = e.target.checked;
+      cards.classList.toggle('grid-mode', on);
+      sessionStorage.setItem('gridMode', on ? '1' : '0');
+    });
+  </script>
+</body>
+</html>
